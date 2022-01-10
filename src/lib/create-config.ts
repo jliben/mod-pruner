@@ -1,4 +1,5 @@
-import { stat, writeFile } from 'fs/promises';
+import { promises } from 'fs';
+const { stat, writeFile } = promises;
 import { join } from 'path';
 import { cwd } from 'process';
 import { CONFIG_FILENAME, DEFAULT_GLOBS } from './constants';

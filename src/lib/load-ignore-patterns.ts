@@ -1,5 +1,6 @@
 import { yellow } from 'chalk';
-import { readFile } from 'fs/promises';
+import { promises } from 'fs';
+const { readFile } = promises;
 import { basename } from 'path';
 import { DEFAULT_GLOBS } from './constants';
 

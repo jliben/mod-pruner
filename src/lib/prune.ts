@@ -1,4 +1,5 @@
-import { lstat, readdir, rmdir, unlink } from 'fs/promises';
+import { promises } from 'fs';
+const { lstat, readdir, rmdir, unlink } = promises;
 import ignore, { Ignore } from 'ignore';
 import { join, relative } from 'path';
 import { findModuleDirectories } from './find-module-directories';

@@ -1,4 +1,5 @@
-import { readdir, stat } from 'fs/promises';
+import { promises } from 'fs';
+const { readdir, stat } = promises;
 import { join } from 'path';
 
 interface IDirectorySizeResult {

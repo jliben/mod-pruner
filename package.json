@@ -14,7 +14,7 @@
     "postversion": "git push --follow-tags && npm publish"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=12"
   },
   "files": [
     "dist/*"
