@@ -1,7 +1,7 @@
 import { promises } from 'fs';
 const { lstat, readdir, rmdir, unlink } = promises;
 import ignore, { Ignore } from 'ignore';
-import { join, relative } from 'path';
+import { join, relative, sep, posix } from 'path';
 import { findModuleDirectories } from './find-module-directories';
 import { getDirectorySize } from './get-directory-size';
 
@@ -48,13 +48,14 @@ async function pruneModules(folder: string, cwd: string, ignore: Ignore, force: 
     prunedFiles: [],
     prunedFolders: [],
   };
-  const dirItems = await readdir(folder);
+  const dirItems = await readdir(cwd);
 
   // count the removed items to check for empty directories after the loop
   let removeItems = 0;
   for (const item of dirItems) {
-    const absPath = join(folder, item);
-    let relativPath = relative(cwd, absPath);
+    const absPath = join(cwd, item);
+    let relativPath = relative(folder, absPath);
+    relativPath = relativPath.split(sep).join(posix.sep)
     const stats = await lstat(absPath);
     const isDir = stats.isDirectory();
 
@@ -91,7 +92,7 @@ async function pruneModules(folder: string, cwd: string, ignore: Ignore, force: 
       removeItems++;
     } else {
       if (isDir) {
-        const subFolderPrune = await pruneModules(absPath, folder, ignore, force);
+        const subFolderPrune = await pruneModules(folder, absPath, ignore, force);
 
         res.prunedDiskSize += subFolderPrune.prunedDiskSize;
         res.prunedFiles.push(...subFolderPrune.prunedFiles);
@@ -104,7 +105,7 @@ async function pruneModules(folder: string, cwd: string, ignore: Ignore, force: 
   if (dirItems.length === 0 || dirItems.length === removeItems) {
     res.prunedFolders.push(folder);
     if (force === true) {
-      await rmdir(folder);
+      await rmdir(cwd);
     }
   }
 
